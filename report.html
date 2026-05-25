@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ai-workflow-automation dependency security report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+      --border: #d9e0ea;
+      --low-bg: #dcfce7;
+      --low-text: #166534;
+      --medium-bg: #fef3c7;
+      --medium-text: #92400e;
+      --high-bg: #fee2e2;
+      --high-text: #991b1b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 32px auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .metric-value {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .table-card {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 860px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--border);
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: #f9fafb;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .package-name {
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge-low {
+      background: var(--low-bg);
+      color: var(--low-text);
+    }
+
+    .badge-medium {
+      background: var(--medium-bg);
+      color: var(--medium-text);
+    }
+
+    .badge-high {
+      background: var(--high-bg);
+      color: var(--high-text);
+    }
+
+    .warnings {
+      margin: 0;
+      padding-left: 18px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>ai-workflow-automation</h1>
+      <div class="muted">Version 0.1.0 - Scanned 2026-05-22T18:34:23.119Z</div>
+    </header>
+
+    <section class="grid" aria-label="Project health">
+      <article class="card">
+        <div class="metric-label">Health Score</div>
+        <div class="metric-value">76/100</div>
+      </article>
+      <article class="card">
+        <div class="metric-label">Health Grade</div>
+        <div class="metric-value">B</div>
+      </article>
+      <article class="card">
+        <div class="metric-label">Health Deductions</div>
+        <div class="metric-value">24</div>
+      </article>
+    </section>
+
+    <section class="grid" aria-label="Risk summary">
+      <article class="card">
+        <div class="metric-label">Dependencies</div>
+        <div class="metric-value">21</div>
+      </article>
+      <article class="card">
+        <div class="metric-label">Low Risk</div>
+        <div class="metric-value">21</div>
+      </article>
+      <article class="card">
+        <div class="metric-label">Medium Risk</div>
+        <div class="metric-value">0</div>
+      </article>
+      <article class="card">
+        <div class="metric-label">High Risk</div>
+        <div class="metric-value">0</div>
+      </article>
+    </section>
+
+    <section class="grid" aria-label="Audit summary">
+      <article class="card">
+        <div class="metric-label">Total Vulnerabilities</div>
+        <div class="metric-value">2</div>
+      </article>
+      <article class="card">
+        <div class="metric-label">Low</div>
+        <div class="metric-value">0</div>
+      </article>
+      <article class="card">
+        <div class="metric-label">Moderate</div>
+        <div class="metric-value">2</div>
+      </article>
+      <article class="card">
+        <div class="metric-label">High</div>
+        <div class="metric-value">0</div>
+      </article>
+      <article class="card">
+        <div class="metric-label">Critical</div>
+        <div class="metric-value">0</div>
+      </article>
+    </section>
+
+    <section class="card table-card">
+      <h2>Dependency Table</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Package Name</th>
+            <th>Installed Version</th>
+            <th>Latest Version</th>
+            <th>Risk Score</th>
+            <th>Risk Level</th>
+            <th>Warnings</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="package-name">clsx</td>
+            <td>^2.1.1</td>
+            <td>2.1.1</td>
+            <td>20</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Last publish is older than 2 years</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">class-variance-authority</td>
+            <td>^0.7.1</td>
+            <td>0.7.1</td>
+            <td>10</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Package name contains risky keyword(s): auth</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">eslint</td>
+            <td>^9</td>
+            <td>10.4.0</td>
+            <td>10</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Package has more than 20 dependencies</li><li>Update available: installed ^9, latest 10.4.0</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">shadcn</td>
+            <td>^4.7.0</td>
+            <td>4.8.0</td>
+            <td>10</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Package has more than 20 dependencies</li><li>Update available: installed ^4.7.0, latest 4.8.0</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">@base-ui/react</td>
+            <td>^1.4.1</td>
+            <td>1.5.0</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Update available: installed ^1.4.1, latest 1.5.0</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">@google/generative-ai</td>
+            <td>^0.24.1</td>
+            <td>0.24.1</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><span class="muted">None</span></td>
+          </tr>
+<tr>
+            <td class="package-name">@supabase/supabase-js</td>
+            <td>^2.106.0</td>
+            <td>2.106.1</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Update available: installed ^2.106.0, latest 2.106.1</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">@tailwindcss/postcss</td>
+            <td>^4</td>
+            <td>4.3.0</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Update available: installed ^4, latest 4.3.0</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">@types/node</td>
+            <td>^20</td>
+            <td>25.9.1</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Update available: installed ^20, latest 25.9.1</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">@types/react</td>
+            <td>^19</td>
+            <td>19.2.15</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Update available: installed ^19, latest 19.2.15</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">@types/react-dom</td>
+            <td>^19</td>
+            <td>19.2.3</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Update available: installed ^19, latest 19.2.3</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">eslint-config-next</td>
+            <td>16.2.6</td>
+            <td>16.2.6</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><span class="muted">None</span></td>
+          </tr>
+<tr>
+            <td class="package-name">html-to-image</td>
+            <td>^1.11.13</td>
+            <td>1.11.13</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><span class="muted">None</span></td>
+          </tr>
+<tr>
+            <td class="package-name">lucide-react</td>
+            <td>^1.16.0</td>
+            <td>1.16.0</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><span class="muted">None</span></td>
+          </tr>
+<tr>
+            <td class="package-name">next</td>
+            <td>16.2.6</td>
+            <td>16.2.6</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><span class="muted">None</span></td>
+          </tr>
+<tr>
+            <td class="package-name">react</td>
+            <td>19.2.4</td>
+            <td>19.2.6</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Update available: installed 19.2.4, latest 19.2.6</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">react-dom</td>
+            <td>19.2.4</td>
+            <td>19.2.6</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Update available: installed 19.2.4, latest 19.2.6</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">tailwind-merge</td>
+            <td>^3.6.0</td>
+            <td>3.6.0</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><span class="muted">None</span></td>
+          </tr>
+<tr>
+            <td class="package-name">tailwindcss</td>
+            <td>^4</td>
+            <td>4.3.0</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Update available: installed ^4, latest 4.3.0</li></ul></td>
+          </tr>
+<tr>
+            <td class="package-name">tw-animate-css</td>
+            <td>^1.4.0</td>
+            <td>1.4.0</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><span class="muted">None</span></td>
+          </tr>
+<tr>
+            <td class="package-name">typescript</td>
+            <td>^5</td>
+            <td>6.0.3</td>
+            <td>0</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><ul class="warnings"><li>Update available: installed ^5, latest 6.0.3</li></ul></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
