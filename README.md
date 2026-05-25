@@ -1,36 +1,255 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AIFLOW 🚀
 
-## Getting Started
+AIFlow is a modern AI-powered SaaS platform built for small business owners to automate daily business tasks using AI.
 
-First, run the development server:
+It helps businesses generate:
+
+* Social media captions
+* Customer replies
+* Professional invoices
+* FAQ responses
+* Product descriptions
+
+with a clean and professional dashboard experience.
+
+---
+
+# ✨ Features
+
+## 🔐 Authentication
+
+* Email & Password Authentication
+* Google Authentication
+* Forgot Password / Reset Password
+* Protected Dashboard Routes
+* JWT + NextAuth Authentication
+
+---
+
+## 🤖 AI Tools
+
+### AI Caption Generator
+
+Generate social media captions for:
+
+* Instagram
+* WhatsApp
+* Facebook
+* LinkedIn
+
+Features:
+
+* Tone selection
+* Platform selection
+* Copy & regenerate options
+
+---
+
+### Customer Reply Assistant
+
+Generate smart customer responses instantly.
+
+Features:
+
+* Professional reply generation
+* Tone selection
+* WhatsApp-style responses
+* Copy button
+
+---
+
+### Invoice Generator
+
+Create professional invoices and receipts.
+
+Features:
+
+* Multiple products/services
+* Currency selection
+* Payment methods
+* Logo upload
+* Watermark logo support
+* PNG invoice export
+* Dynamic invoice number generation
+
+---
+
+### AI FAQ Assistant
+
+Generate customer FAQ responses using AI.
+
+Features:
+
+* Business context input
+* Smart AI answers
+* FAQ preview panel
+* Copy & regenerate actions
+
+---
+
+### Product Description Generator
+
+Generate ecommerce product descriptions.
+
+Features:
+
+* Platform targeting
+* SEO keywords
+* Tone customization
+* Product categories
+* Marketing-focused copy
+
+---
+
+# 📊 Dashboard Features
+
+* Responsive SaaS dashboard
+* Notification system
+* User settings page
+* Generation history
+* Daily usage limit system
+* Modern UI/UX
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
+* Next.js 15
+* TypeScript
+* Tailwind CSS
+* Lucide React
+
+## Backend
+
+* Next.js App Router APIs
+* MongoDB Atlas
+* Mongoose
+
+## Authentication
+
+* NextAuth
+* JWT
+* Google OAuth
+
+## AI
+
+* Google Gemini API
+
+---
+
+# 📂 Project Structure
+
+```bash
+app/
+ ├── api/
+ ├── dashboard/
+ ├── login/
+ ├── register/
+ ├── forgot-password/
+ ├── reset-password/
+
+components/
+lib/
+models/
+hooks/
+public/
+```
+
+---
+
+# ⚙️ Environment Variables
+
+Create a `.env.local` file:
+
+```env
+MONGODB_URI=
+
+JWT_SECRET=
+
+NEXTAUTH_SECRET=
+
+NEXTAUTH_URL=http://localhost:3000
+
+GOOGLE_CLIENT_ID=
+
+GOOGLE_CLIENT_SECRET=
+
+GEMINI_API_KEY=
+```
+
+---
+
+# 🚀 Getting Started
+
+## Install Dependencies
+
+```bash
+npm install
+```
+
+## Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+# 🔒 Daily Usage Limit
 
-To learn more about Next.js, take a look at the following resources:
+Free users get:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+10 AI generations per day
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+# 📦 Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Deploy easily using:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* Vercel
+* MongoDB Atlas
+
+---
+
+# 📱 Responsive Design
+
+AIFLOW is fully responsive across:
+
+* Mobile
+* Tablet
+* Desktop
+
+---
+
+# 🎯 Future Improvements
+
+* Stripe subscriptions
+* Team accounts
+* AI workflow automation builder
+* Export history
+* Email integrations
+* WhatsApp integrations
+* Analytics dashboard
+
+---
+
+# 👨‍💻 Author
+
+Built by Amao Elijah
+
+---
+
+# 📄 License
+
+MIT License
