@@ -182,7 +182,7 @@ export default function HistoryPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
+    <main className="min-h-screen overflow-x-hidden bg-[#F8FAFC] text-[#0F172A]">
       <div className="flex min-h-screen">
         <aside className="hidden w-[292px] shrink-0 border-r border-[#E2E8F0] bg-white px-5 py-6 shadow-[18px_0_60px_rgba(15,23,42,0.04)] lg:flex lg:flex-col">
           <Link href="/" className="flex items-center gap-3">
@@ -224,10 +224,10 @@ export default function HistoryPage() {
           </div>
         </aside>
 
-        <section className="flex-1 px-4 py-5 sm:px-6 lg:px-10 lg:py-7">
+        <section className="flex-1 px-4 py-6 sm:px-6 lg:px-10">
           <div className="mx-auto w-full max-w-7xl">
             <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center justify-between gap-4 lg:hidden">
+              <div className="hidden">
                 <Link href="/" className="flex items-center gap-3">
                   <AiflowLogo compact />
                 </Link>
@@ -269,14 +269,14 @@ export default function HistoryPage() {
               </div>
             </div>
 
-            <section className="mt-5 overflow-hidden rounded-[28px] border border-[#E2E8F0] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)]">
-              <div className="grid gap-8 p-6 sm:p-8 xl:grid-cols-[1fr_360px] xl:items-center">
+            <section className="mt-5 overflow-hidden rounded-[24px] border border-[#E2E8F0] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)] sm:rounded-[28px]">
+              <div className="grid gap-8 p-5 sm:p-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,360px)] xl:items-center">
                 <div>
                   <div className="inline-flex items-center gap-2 rounded-full border border-[#BAE6FD] bg-[#F0F9FF] px-3 py-1 text-sm font-semibold text-[#0369A1]">
                     <Clock3 size={15} />
                     Saved generations
                   </div>
-                  <h1 className="mt-6 max-w-3xl text-3xl font-black leading-[1.08] tracking-tight text-[#0F172A] sm:text-5xl">
+                  <h1 className="mt-6 max-w-3xl text-3xl font-black leading-[1.08] tracking-tight text-[#0F172A] sm:text-4xl lg:text-5xl">
                     Generation History
                   </h1>
                   <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
@@ -289,7 +289,7 @@ export default function HistoryPage() {
                   <p className="text-sm font-black text-[#0F172A]">
                     Filter by type
                   </p>
-                  <div className="mt-4 grid grid-cols-2 gap-2">
+                  <div className="mt-4 grid grid-cols-1 gap-2 min-[360px]:grid-cols-2">
                     {filters.map((filter) => (
                       <FilterButton
                         key={filter.value}
@@ -383,7 +383,7 @@ function HistoryCard({
   onDelete: () => void;
 }) {
   return (
-    <article className="rounded-[24px] border border-[#E2E8F0] bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)] transition hover:border-[#BAE6FD] hover:shadow-[0_24px_70px_rgba(14,165,233,0.10)]">
+    <article className="min-w-0 rounded-[24px] border border-[#E2E8F0] bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)] transition hover:border-[#BAE6FD] hover:shadow-[0_24px_70px_rgba(14,165,233,0.10)]">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-[#BAE6FD] bg-[#F0F9FF] px-3 py-1 text-xs font-bold text-[#0369A1]">
@@ -395,11 +395,11 @@ function HistoryCard({
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 min-[360px]:flex-row">
           <button
             type="button"
             onClick={onCopy}
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-3 text-xs font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] hover:text-[#0369A1]"
+            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-3 text-xs font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] hover:text-[#0369A1] min-[360px]:w-auto"
           >
             {copied ? <Check size={15} /> : <Copy size={15} />}
             {copied ? "Copied" : "Copy"}
@@ -408,7 +408,7 @@ function HistoryCard({
             type="button"
             onClick={onDelete}
             disabled={deleting}
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-[14px] border border-red-200 bg-white px-3 text-xs font-bold text-red-600 shadow-sm transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[14px] border border-red-200 bg-white px-3 text-xs font-bold text-red-600 shadow-sm transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 min-[360px]:w-auto"
           >
             <Trash2 size={15} />
             {deleting ? "Deleting" : "Delete"}
@@ -421,7 +421,7 @@ function HistoryCard({
           <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
             Prompt
           </p>
-          <p className="mt-2 line-clamp-4 whitespace-pre-wrap text-sm leading-6 text-slate-600">
+          <p className="mt-2 line-clamp-4 whitespace-pre-wrap break-words text-sm leading-6 text-slate-600">
             {item.prompt}
           </p>
         </div>
@@ -430,7 +430,7 @@ function HistoryCard({
           <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
             Response
           </p>
-          <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-[#0F172A]">
+          <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-7 text-[#0F172A]">
             {item.response}
           </p>
         </div>

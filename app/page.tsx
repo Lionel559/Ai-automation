@@ -111,18 +111,18 @@ const pricing = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
+    <main className="min-h-screen overflow-x-hidden bg-[#F8FAFC] text-[#0F172A]">
       <Navbar />
 
-      <section className="px-4 pb-16 pt-10 sm:px-6 lg:px-8 lg:pb-20 lg:pt-16">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1fr_520px]">
-          <div>
+      <section className="px-4 py-6 sm:px-6 lg:px-10 lg:pb-20 lg:pt-16">
+        <div className="mx-auto grid max-w-7xl items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:gap-10">
+          <div className="min-w-0">
             <div className="inline-flex items-center gap-2 rounded-full border border-[#BAE6FD] bg-[#F0F9FF] px-3 py-1 text-sm font-semibold text-[#0369A1]">
               <Sparkles size={15} />
               AI automation SaaS for small business
             </div>
 
-            <h1 className="mt-6 max-w-4xl text-4xl font-black leading-[1.05] text-[#0F172A] sm:text-6xl">
+            <h1 className="mt-6 max-w-4xl text-3xl font-black leading-[1.08] text-[#0F172A] sm:text-5xl lg:text-6xl">
               AI automation for small business
             </h1>
 
@@ -135,14 +135,14 @@ export default function Home() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/register"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-[14px] bg-[#0F172A] px-6 text-sm font-bold text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] transition hover:bg-[#1E293B]"
+                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[14px] bg-[#0F172A] px-6 text-sm font-bold text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] transition hover:bg-[#1E293B] sm:w-auto"
               >
                 Start free
                 <ArrowRight size={17} />
               </Link>
               <Link
                 href="/register"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-6 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF]"
+                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-6 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] sm:w-auto"
               >
                 Get Started Free
                 <LayoutDashboard size={17} className="text-[#0EA5E9]" />
@@ -160,7 +160,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" className="px-4 py-16 sm:px-6 lg:px-8">
+      <section id="features" className="px-4 py-12 sm:px-6 lg:px-10 lg:py-16">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Features"
@@ -176,7 +176,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="tools" className="px-4 py-16 sm:px-6 lg:px-8">
+      <section id="tools" className="px-4 py-12 sm:px-6 lg:px-10 lg:py-16">
         <div className="mx-auto max-w-7xl">
           <div className="rounded-[28px] border border-[#E2E8F0] bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)] sm:p-8">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
@@ -187,7 +187,7 @@ export default function Home() {
               />
               <Link
                 href="/register"
-                className="inline-flex h-11 items-center justify-center rounded-[14px] border border-[#CBD5E1] bg-white px-5 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF]"
+                className="inline-flex h-11 w-full items-center justify-center rounded-[14px] border border-[#CBD5E1] bg-white px-5 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] sm:w-auto"
               >
                 Get Started Free
               </Link>
@@ -202,7 +202,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="how-it-works" className="px-4 py-16 sm:px-6 lg:px-8">
+      <section id="how-it-works" className="px-4 py-12 sm:px-6 lg:px-10 lg:py-16">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="How it works"
@@ -218,7 +218,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="pricing" className="px-4 py-16 sm:px-6 lg:px-8">
+      <section id="pricing" className="px-4 py-12 sm:px-6 lg:px-10 lg:py-16">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Pricing"
@@ -234,7 +234,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <section className="px-4 py-12 sm:px-6 lg:px-10 lg:py-16">
         <div className="mx-auto max-w-7xl rounded-[28px] border border-[#E2E8F0] bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)] sm:p-10">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
@@ -254,14 +254,14 @@ export default function Home() {
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
               <Link
                 href="/register"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-[14px] bg-[#0F172A] px-6 text-sm font-bold text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] transition hover:bg-[#1E293B]"
+                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[14px] bg-[#0F172A] px-6 text-sm font-bold text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] transition hover:bg-[#1E293B] sm:w-auto lg:w-full"
               >
                 Create account
                 <ArrowRight size={17} />
               </Link>
               <Link
                 href="/login"
-                className="inline-flex h-12 items-center justify-center rounded-[14px] border border-[#CBD5E1] bg-white px-6 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF]"
+                className="inline-flex h-12 w-full items-center justify-center rounded-[14px] border border-[#CBD5E1] bg-white px-6 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] sm:w-auto lg:w-full"
               >
                 Log in
               </Link>
@@ -277,9 +277,9 @@ export default function Home() {
 
 function Navbar() {
   return (
-    <header className="sticky top-0 z-20 border-b border-[#E2E8F0] bg-white/90 px-4 py-4 backdrop-blur sm:px-6 lg:px-8">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-3">
+    <header className="sticky top-0 z-20 border-b border-[#E2E8F0] bg-white/90 px-4 py-4 backdrop-blur sm:px-6 lg:px-10">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
+        <Link href="/" className="flex min-w-0 items-center gap-3">
           <AiflowLogo />
         </Link>
 
@@ -298,7 +298,7 @@ function Navbar() {
           </a>
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <Link
             href="/login"
             className="hidden h-10 items-center justify-center rounded-[14px] px-4 text-sm font-bold text-[#0F172A] transition hover:bg-[#F0F9FF] sm:inline-flex"
@@ -337,9 +337,9 @@ function AiflowLogo() {
 
 function DashboardPreview() {
   return (
-    <div className="rounded-[28px] border border-[#E2E8F0] bg-white p-4 shadow-[0_24px_70px_rgba(15,23,42,0.10)]">
+    <div className="min-w-0 rounded-[24px] border border-[#E2E8F0] bg-white p-3 shadow-[0_24px_70px_rgba(15,23,42,0.10)] sm:rounded-[28px] sm:p-4">
       <div className="rounded-[22px] border border-[#E2E8F0] bg-[#F8FAFC] p-4">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex min-w-0 items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-[#0F172A] text-sm font-black text-white">
               A
@@ -358,12 +358,12 @@ function DashboardPreview() {
           </div>
         </div>
 
-        <div className="mt-5 rounded-[20px] border border-[#E2E8F0] bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
+        <div className="mt-5 rounded-[20px] border border-[#E2E8F0] bg-white p-4 shadow-[0_16px_40px_rgba(15,23,42,0.06)] sm:p-5">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#BAE6FD] bg-[#F0F9FF] px-3 py-1 text-xs font-bold text-[#0369A1]">
             <Sparkles size={14} />
             AIFLOW workspace
           </div>
-          <h3 className="mt-4 text-2xl font-black leading-tight text-[#0F172A]">
+          <h3 className="mt-4 text-xl font-black leading-tight text-[#0F172A] sm:text-2xl">
             Create your next business asset
           </h3>
           <p className="mt-3 text-sm leading-6 text-slate-500">
@@ -592,7 +592,7 @@ function PricingCard({
 
 function Footer() {
   return (
-    <footer className="border-t border-[#E2E8F0] bg-white px-4 py-8 sm:px-6 lg:px-8">
+    <footer className="border-t border-[#E2E8F0] bg-white px-4 py-8 sm:px-6 lg:px-10">
       <div className="mx-auto flex max-w-7xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <Link href="/" className="flex items-center gap-3">
           <AiflowLogo />

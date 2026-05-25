@@ -20,6 +20,15 @@ const userSchema = new Schema(
       default: "",
       select: false,
     },
+    resetToken: {
+      type: String,
+      select: false,
+      index: true,
+    },
+    resetTokenExpiry: {
+      type: Date,
+      select: false,
+    },
     provider: {
       type: String,
       enum: ["credentials", "google"],

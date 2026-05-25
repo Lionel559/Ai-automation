@@ -158,7 +158,7 @@ export default function ProductDescriptionPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] px-4 py-6 text-[#0F172A] sm:px-6 lg:px-10">
+    <main className="min-h-screen overflow-x-hidden bg-[#F8FAFC] px-4 py-6 text-[#0F172A] sm:px-6 lg:px-10">
       <div className="mx-auto w-full max-w-7xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <Link
@@ -175,14 +175,14 @@ export default function ProductDescriptionPage() {
           </div>
         </div>
 
-        <section className="mt-5 overflow-hidden rounded-[28px] border border-[#E2E8F0] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)]">
-          <div className="grid gap-8 p-6 sm:p-8 xl:grid-cols-[1fr_380px] xl:items-center">
+        <section className="mt-5 overflow-hidden rounded-[24px] border border-[#E2E8F0] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)] sm:rounded-[28px]">
+          <div className="grid gap-8 p-5 sm:p-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,380px)] xl:items-center">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-[#BAE6FD] bg-[#F0F9FF] px-3 py-1 text-sm font-semibold text-[#0369A1]">
                 <Store size={15} />
                 Ecommerce copywriting
               </div>
-              <h1 className="mt-6 max-w-3xl text-3xl font-black leading-[1.08] tracking-tight text-[#0F172A] sm:text-5xl">
+              <h1 className="mt-6 max-w-3xl text-3xl font-black leading-[1.08] tracking-tight text-[#0F172A] sm:text-4xl lg:text-5xl">
                 AI Product Description Generator
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
@@ -225,7 +225,7 @@ export default function ProductDescriptionPage() {
           </div>
         </section>
 
-        <section className="mt-6 grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,0.92fr)_minmax(420px,1fr)]">
+        <section className="mt-6 grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1fr)]">
           <div className="rounded-[28px] border border-[#E2E8F0] bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)] sm:p-6">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#0EA5E9]">
@@ -477,7 +477,7 @@ function ChipGroup<T extends string>({
   return (
     <div className="mt-7">
       <p className="text-sm font-bold text-[#0F172A]">{label}</p>
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="mt-3 grid grid-cols-1 gap-2 min-[360px]:grid-cols-2 sm:flex sm:flex-wrap">
         {options.map((item) => {
           const active = item === value;
 
@@ -487,7 +487,7 @@ function ChipGroup<T extends string>({
               type="button"
               onClick={() => onChange(item)}
               className={[
-                "rounded-full border px-4 py-2 text-sm font-bold transition",
+                "rounded-full border px-4 py-2 text-sm font-bold transition sm:w-auto",
                 active
                   ? "border-[#0EA5E9] bg-[#F0F9FF] text-[#0369A1] shadow-[0_10px_24px_rgba(14,165,233,0.12)]"
                   : "border-[#E2E8F0] bg-white text-slate-600 hover:border-[#BAE6FD] hover:bg-[#F8FAFC]",
@@ -518,7 +518,7 @@ function ActionButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex h-10 items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-3 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] hover:text-[#0369A1] disabled:cursor-not-allowed disabled:opacity-45"
+      className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-3 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] hover:text-[#0369A1] disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
     >
       <Icon size={16} />
       {label}

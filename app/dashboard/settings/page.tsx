@@ -250,7 +250,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
+    <main className="min-h-screen overflow-x-hidden bg-[#F8FAFC] text-[#0F172A]">
       <div className="flex min-h-screen">
         <aside className="hidden w-[292px] shrink-0 border-r border-[#E2E8F0] bg-white px-5 py-6 shadow-[18px_0_60px_rgba(15,23,42,0.04)] lg:flex lg:flex-col">
           <Link href="/" className="flex items-center gap-3">
@@ -293,10 +293,10 @@ export default function SettingsPage() {
           </div>
         </aside>
 
-        <section className="flex-1 px-4 py-5 sm:px-6 lg:px-10 lg:py-7">
+        <section className="flex-1 px-4 py-6 sm:px-6 lg:px-10">
           <div className="mx-auto w-full max-w-7xl">
             <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center justify-between gap-4 lg:hidden">
+              <div className="hidden">
                 <Link href="/" className="flex items-center gap-3">
                   <AiflowLogo compact />
                 </Link>
@@ -338,14 +338,14 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <section className="mt-5 overflow-hidden rounded-[28px] border border-[#E2E8F0] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)]">
-              <div className="grid gap-8 p-6 sm:p-8 xl:grid-cols-[1fr_360px] xl:items-center">
+            <section className="mt-5 overflow-hidden rounded-[24px] border border-[#E2E8F0] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)] sm:rounded-[28px]">
+              <div className="grid gap-8 p-5 sm:p-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,360px)] xl:items-center">
                 <div>
                   <div className="inline-flex items-center gap-2 rounded-full border border-[#BAE6FD] bg-[#F0F9FF] px-3 py-1 text-sm font-semibold text-[#0369A1]">
                     <UserRound size={15} />
                     Profile and business setup
                   </div>
-                  <h1 className="mt-6 max-w-3xl text-3xl font-black leading-[1.08] tracking-tight text-[#0F172A] sm:text-5xl">
+                  <h1 className="mt-6 max-w-3xl text-3xl font-black leading-[1.08] tracking-tight text-[#0F172A] sm:text-4xl lg:text-5xl">
                     Settings
                   </h1>
                   <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
@@ -376,7 +376,7 @@ export default function SettingsPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="mt-5 grid grid-cols-2 gap-3">
+                  <div className="mt-5 grid grid-cols-1 gap-3 min-[360px]:grid-cols-2">
                     <MiniMetric icon={WalletCards} value={form.defaultCurrency} label="Currency" />
                     <MiniMetric icon={CreditCard} value={form.defaultPaymentMethod} label="Payment" />
                   </div>
@@ -396,7 +396,7 @@ export default function SettingsPage() {
               </div>
             ) : null}
 
-            <section className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(360px,0.62fr)]">
+            <section className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,0.62fr)]">
               <div className="rounded-[28px] border border-[#E2E8F0] bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)] sm:p-6">
                 {loading ? (
                   <LoadingState />

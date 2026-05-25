@@ -384,7 +384,7 @@ export default function InvoicePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] px-6 py-8 text-[#0F172A]">
+    <main className="min-h-screen overflow-x-hidden bg-[#F8FAFC] px-4 py-6 text-[#0F172A] sm:px-6 lg:px-10">
       {downloaded ? (
         <div className="fixed right-4 top-4 z-50 flex items-center gap-3 rounded-[18px] border border-[#BAE6FD] bg-white px-4 py-3 text-sm font-bold text-[#0F172A] shadow-[0_18px_42px_rgba(15,23,42,0.14)]">
           <div className="flex h-9 w-9 items-center justify-center rounded-[13px] bg-[#F0F9FF] text-[#0EA5E9]">
@@ -396,7 +396,7 @@ export default function InvoicePage() {
 
       <div className="mx-auto w-full max-w-[1500px]">
             <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center justify-between gap-4 lg:hidden">
+              <div className="hidden">
                 <Link href="/" className="flex items-center gap-3">
                   <AiflowLogo compact />
                 </Link>
@@ -438,14 +438,14 @@ export default function InvoicePage() {
               </div>
             </div>
 
-            <section className="mt-5 overflow-hidden rounded-[28px] border border-[#E2E8F0] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)]">
-              <div className="grid gap-8 p-6 sm:p-8 xl:grid-cols-[1fr_400px] xl:items-center">
+            <section className="mt-5 overflow-hidden rounded-[24px] border border-[#E2E8F0] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)] sm:rounded-[28px]">
+              <div className="grid gap-8 p-5 sm:p-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,400px)] xl:items-center">
                 <div>
                   <div className="inline-flex items-center gap-2 rounded-full border border-[#BAE6FD] bg-[#F0F9FF] px-3 py-1 text-sm font-semibold text-[#0369A1]">
                     <Sparkles size={15} />
                     Invoice studio
                   </div>
-                  <h1 className="mt-6 max-w-3xl text-3xl font-black leading-[1.08] tracking-tight text-[#0F172A] sm:text-5xl">
+                  <h1 className="mt-6 max-w-3xl text-3xl font-black leading-[1.08] tracking-tight text-[#0F172A] sm:text-4xl lg:text-5xl">
                     AI Invoice Generator
                   </h1>
                   <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
@@ -468,7 +468,7 @@ export default function InvoicePage() {
                       </p>
                     </div>
                   </div>
-                  <div className="mt-5 grid grid-cols-3 gap-3">
+                  <div className="mt-5 grid grid-cols-1 gap-3 min-[360px]:grid-cols-3">
                     <MiniMetric icon={FileText} value="PNG" label="Export" />
                     <MiniMetric
                       icon={Clock3}
@@ -485,7 +485,7 @@ export default function InvoicePage() {
               </div>
             </section>
 
-            <section className="mt-6 grid grid-cols-1 items-start gap-8 xl:grid-cols-[520px_minmax(0,1fr)]">
+            <section className="mt-6 grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,520px)_minmax(0,1fr)]">
               <div className="min-w-0 rounded-[28px] border border-[#E2E8F0] bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)] sm:p-6">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#0EA5E9]">
@@ -611,7 +611,7 @@ export default function InvoicePage() {
                     type="button"
                     onClick={generateInvoice}
                     disabled={loading || !canGenerate}
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-[14px] bg-[#0F172A] px-5 text-sm font-bold text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] transition hover:bg-[#1E293B] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[14px] bg-[#0F172A] px-5 text-sm font-bold text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] transition hover:bg-[#1E293B] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                   >
                     {loading ? (
                       <>
@@ -630,7 +630,7 @@ export default function InvoicePage() {
                     type="button"
                     onClick={downloadInvoice}
                     disabled={!canGenerate}
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-5 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] hover:text-[#0369A1] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-5 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] hover:text-[#0369A1] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                   >
                     <Download size={17} className="text-[#0EA5E9]" />
                     Download PNG
@@ -671,16 +671,18 @@ export default function InvoicePage() {
 
                   {loading ? <LoadingState /> : null}
 
-                  <PremiumInvoicePreview
-                    currency={currency}
-                    invoice={previewInvoice}
-                    invoiceRef={invoiceRef}
-                    items={normalizedItems}
-                    logoDataUrl={logoDataUrl}
-                    paymentMethod={paymentMethod}
-                    status={status}
-                    totals={totals}
-                  />
+                  <div className="-mx-2 overflow-x-auto px-2 sm:mx-0 sm:px-0">
+                    <PremiumInvoicePreview
+                      currency={currency}
+                      invoice={previewInvoice}
+                      invoiceRef={invoiceRef}
+                      items={normalizedItems}
+                      logoDataUrl={logoDataUrl}
+                      paymentMethod={paymentMethod}
+                      status={status}
+                      totals={totals}
+                    />
+                  </div>
                 </div>
               </div>
             </section>
@@ -1101,7 +1103,7 @@ function LineItemsEditor({
         <button
           type="button"
           onClick={onAddItem}
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-4 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] hover:text-[#0369A1]"
+          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-4 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] hover:text-[#0369A1] sm:w-auto"
         >
           <Plus size={16} className="text-[#0EA5E9]" />
           Add item
@@ -1127,7 +1129,7 @@ function LineItemsEditor({
               <button
                 type="button"
                 onClick={() => onRemoveItem(item.id)}
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-[13px] border border-[#CBD5E1] bg-white px-3 text-sm font-bold text-slate-500 shadow-sm transition hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+                className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[13px] border border-[#CBD5E1] bg-white px-3 text-sm font-bold text-slate-500 shadow-sm transition hover:border-red-200 hover:bg-red-50 hover:text-red-700 sm:w-auto"
                 aria-label={`Remove item ${index + 1}`}
               >
                 <Trash2 size={16} />
@@ -1335,7 +1337,7 @@ function PremiumInvoicePreview({
   return (
     <div
       ref={invoiceRef}
-      className="relative mt-6 w-full rounded-[34px] bg-[#E8EEF6] p-3 text-[#0F172A] sm:p-5"
+      className="relative mt-6 w-full min-w-[640px] rounded-[28px] bg-[#E8EEF6] p-3 text-[#0F172A] sm:min-w-0 sm:rounded-[34px] sm:p-5"
     >
       <article className="relative overflow-hidden rounded-[30px] bg-white px-5 py-7 shadow-[0_28px_90px_rgba(15,23,42,0.16)] sm:px-8 sm:py-9 lg:p-12">
         {!logoDataUrl ? (
