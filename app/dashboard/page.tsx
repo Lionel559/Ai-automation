@@ -1,9 +1,18 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
+
+import {
+  DashboardGreeting,
+  DashboardUserMenu,
+  DashboardUsageStatValue,
+  DashboardUsageSummary,
+} from "@/components/auth/dashboard-auth";
 
 import {
   ArrowRight,
   Bell,
   Bot,
+  Clock3,
   Crown,
   FileText,
   Grid2X2,
@@ -102,8 +111,9 @@ export default function DashboardPage() {
 
           <nav className="mt-10 space-y-2">
             <SidebarItem active icon={Grid2X2} label="Dashboard" />
+            <SidebarItem icon={Clock3} label="History" href="/dashboard/history" />
             <SidebarItem icon={Bot} label="Automations" />
-            <SidebarItem icon={Settings} label="Settings" />
+            <SidebarItem icon={Settings} label="Settings" href="/dashboard/settings" />
           </nav>
 
           <div className="mt-auto space-y-4">
@@ -120,13 +130,7 @@ export default function DashboardPage() {
               </p>
 
               <div className="mt-5">
-                <div className="flex items-center justify-between text-sm font-semibold">
-                  <span>Generations</span>
-                  <span className="text-[#0EA5E9]">10 / 10</span>
-                </div>
-                <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200">
-                  <div className="h-full w-full rounded-full bg-[#0EA5E9]" />
-                </div>
+                <DashboardUsageSummary />
               </div>
 
               <button className="mt-6 w-full rounded-[14px] bg-[#0F172A] px-4 py-3 text-sm font-bold text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] transition hover:bg-[#1E293B]">
@@ -173,19 +177,7 @@ export default function DashboardPage() {
                   </span>
                 </button>
 
-                <div className="hidden items-center gap-3 rounded-[18px] border border-[#E2E8F0] bg-white px-3 py-2 shadow-sm sm:flex">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0F172A] text-sm font-black text-white">
-                    AE
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold leading-none text-[#0F172A]">
-                      Amao Elijah
-                    </p>
-                    <p className="mt-1 text-xs font-medium text-slate-500">
-                      Small Business
-                    </p>
-                  </div>
-                </div>
+                <DashboardUserMenu />
               </div>
             </header>
 
@@ -197,7 +189,7 @@ export default function DashboardPage() {
                     AIFLOW workspace
                   </div>
                   <h1 className="mt-6 max-w-3xl text-3xl font-black leading-[1.08] tracking-tight text-[#0F172A] sm:text-5xl">
-                    Welcome back, Amao.
+                    <DashboardGreeting />
                   </h1>
                   <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
                     Create, automate, and grow your business from one calm AI
@@ -229,7 +221,17 @@ export default function DashboardPage() {
 
             <section className="mt-6 grid gap-4 md:grid-cols-3">
               {stats.map((item) => (
-                <StatCard key={item.label} {...item} />
+                <StatCard
+                  key={item.label}
+                  {...item}
+                  value={
+                    item.label === "Daily Generations" ? (
+                      <DashboardUsageStatValue />
+                    ) : (
+                      item.value
+                    )
+                  }
+                />
               ))}
             </section>
 
@@ -287,25 +289,39 @@ function AiflowLogo({ compact = false }: { compact?: boolean }) {
 
 function SidebarItem({
   active = false,
+  href,
   icon: Icon,
   label,
 }: {
   active?: boolean;
+  href?: string;
   icon: LucideIcon;
   label: string;
 }) {
-  return (
-    <div
-      className={[
-        "flex items-center gap-4 rounded-[16px] px-4 py-3 text-sm font-bold transition",
-        active
-          ? "border border-[#BAE6FD] bg-[#F0F9FF] text-[#0F172A]"
-          : "text-slate-500 hover:bg-[#F8FAFC] hover:text-[#0F172A]",
-      ].join(" ")}
-    >
+  const className = [
+    "flex items-center gap-4 rounded-[16px] px-4 py-3 text-sm font-bold transition",
+    active
+      ? "border border-[#BAE6FD] bg-[#F0F9FF] text-[#0F172A]"
+      : "text-slate-500 hover:bg-[#F8FAFC] hover:text-[#0F172A]",
+  ].join(" ");
+
+  const content = (
+    <>
       <Icon size={20} className={active ? "text-[#0EA5E9]" : ""} />
       {label}
-    </div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className={className}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className={className}>{content}</div>
   );
 }
 
@@ -338,7 +354,7 @@ function StatCard({
   icon: Icon,
 }: {
   label: string;
-  value: string;
+  value: ReactNode;
   helper: string;
   icon: LucideIcon;
 }) {

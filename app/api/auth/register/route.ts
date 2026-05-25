@@ -1,4 +1,5 @@
 import { hash } from "bcryptjs";
+import { sign } from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
 import connectToDatabase from "@/lib/mongodb";
@@ -6,6 +7,7 @@ import User from "@/models/User";
 
 export const runtime = "nodejs";
 
+const tokenMaxAge = 60 * 60 * 24 * 7;
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(req: Request) {
@@ -63,7 +65,11 @@ export async function POST(req: Request) {
       dailyLimit: 10,
     });
 
-    return NextResponse.json(
+    const token = sign({ userId: String(user._id) }, getJwtSecret(), {
+      expiresIn: "7d",
+    });
+
+    const response = NextResponse.json(
       {
         success: true,
         message: "Account created successfully.",
@@ -77,6 +83,16 @@ export async function POST(req: Request) {
       },
       { status: 201 }
     );
+
+    response.cookies.set("aiflow_token", token, {
+      httpOnly: true,
+      maxAge: tokenMaxAge,
+      path: "/",
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    return response;
   } catch (error) {
     console.log(error);
 
@@ -85,4 +101,14 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+}
+
+function getJwtSecret() {
+  const secret = process.env.JWT_SECRET;
+
+  if (!secret) {
+    throw new Error("Please define the JWT_SECRET environment variable.");
+  }
+
+  return secret;
 }

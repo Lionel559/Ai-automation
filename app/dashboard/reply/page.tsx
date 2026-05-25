@@ -2,6 +2,12 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+
+import {
+  DashboardUsageSummary,
+  DashboardUserMenu,
+} from "@/components/auth/dashboard-auth";
+
 import {
   ArrowLeft,
   Bell,
@@ -110,9 +116,14 @@ export default function ReplyPage() {
       }
 
       setReply(data.reply);
+      window.dispatchEvent(new Event("aiflow:generation-saved"));
     } catch (error) {
       console.log(error);
-      setError("Could not generate replies right now. Please try again.");
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Could not generate replies right now. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -133,9 +144,10 @@ export default function ReplyPage() {
 
           <nav className="mt-10 space-y-2">
             <SidebarItem icon={Grid2X2} label="Dashboard" href="/dashboard" />
+            <SidebarItem icon={Clock3} label="History" href="/dashboard/history" />
             <SidebarItem active icon={MessageSquare} label="Reply Assistant" />
             <SidebarItem icon={Bot} label="Automations" />
-            <SidebarItem icon={Settings} label="Settings" />
+            <SidebarItem icon={Settings} label="Settings" href="/dashboard/settings" />
           </nav>
 
           <div className="mt-auto space-y-4">
@@ -150,13 +162,7 @@ export default function ReplyPage() {
                 Generate customer replies for DMs, WhatsApp, and sales chats.
               </p>
               <div className="mt-5">
-                <div className="flex items-center justify-between text-sm font-semibold">
-                  <span>Generations</span>
-                  <span className="text-[#0EA5E9]">10 / 10</span>
-                </div>
-                <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200">
-                  <div className="h-full w-full rounded-full bg-[#0EA5E9]" />
-                </div>
+                <DashboardUsageSummary />
               </div>
             </div>
 
@@ -199,19 +205,7 @@ export default function ReplyPage() {
                   </span>
                 </button>
 
-                <div className="hidden items-center gap-3 rounded-[18px] border border-[#E2E8F0] bg-white px-3 py-2 shadow-sm sm:flex">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0F172A] text-sm font-black text-white">
-                    AE
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold leading-none text-[#0F172A]">
-                      Amao Elijah
-                    </p>
-                    <p className="mt-1 text-xs font-medium text-slate-500">
-                      Small Business
-                    </p>
-                  </div>
-                </div>
+                <DashboardUserMenu />
               </div>
             </header>
 

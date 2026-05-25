@@ -38,6 +38,25 @@ const userSchema = new Schema(
       min: 0,
       required: true,
     },
+    businessName: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    defaultCurrency: {
+      type: String,
+      enum: ["USD", "NGN", "EUR", "GBP"],
+      default: "NGN",
+    },
+    defaultPaymentMethod: {
+      type: String,
+      enum: ["Cash", "Bank Transfer", "Credit Card", "PayPal", "Crypto"],
+      default: "Bank Transfer",
+    },
+    businessLogo: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,

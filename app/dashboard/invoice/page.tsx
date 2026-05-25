@@ -12,6 +12,9 @@ import {
   type KeyboardEvent,
 } from "react";
 import { toPng } from "html-to-image";
+
+import { DashboardUserMenu } from "@/components/auth/dashboard-auth";
+
 import {
   ArrowLeft,
   Bell,
@@ -238,9 +241,14 @@ export default function InvoicePage() {
         amount: formatMoney(totals.total, currency),
         date: invoiceDate || data.invoice.date,
       });
+      window.dispatchEvent(new Event("aiflow:generation-saved"));
     } catch (error) {
       console.log(error);
-      setError("Could not generate the invoice right now. Please try again.");
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Could not generate the invoice right now. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -412,19 +420,7 @@ export default function InvoicePage() {
                   </span>
                 </button>
 
-                <div className="hidden items-center gap-3 rounded-[18px] border border-[#E2E8F0] bg-white px-3 py-2 shadow-sm sm:flex">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0F172A] text-sm font-black text-white">
-                    AE
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold leading-none text-[#0F172A]">
-                      Amao Elijah
-                    </p>
-                    <p className="mt-1 text-xs font-medium text-slate-500">
-                      Small Business
-                    </p>
-                  </div>
-                </div>
+                <DashboardUserMenu />
               </div>
             </header>
 

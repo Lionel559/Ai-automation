@@ -1,6 +1,6 @@
 import { Schema, model, models, type InferSchemaType, type Model } from "mongoose";
 
-const generationTypes = [
+export const generationTypes = [
   "caption",
   "reply",
   "invoice",

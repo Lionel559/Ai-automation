@@ -141,10 +141,10 @@ export default function Home() {
                 <ArrowRight size={17} />
               </Link>
               <Link
-                href="/dashboard"
+                href="/register"
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-6 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF]"
               >
-                View dashboard
+                Get Started Free
                 <LayoutDashboard size={17} className="text-[#0EA5E9]" />
               </Link>
             </div>
@@ -186,10 +186,10 @@ export default function Home() {
                 description="Choose a focused tool, add a few details, and generate polished business content."
               />
               <Link
-                href="/dashboard"
+                href="/register"
                 className="inline-flex h-11 items-center justify-center rounded-[14px] border border-[#CBD5E1] bg-white px-5 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF]"
               >
-                Open dashboard
+                Get Started Free
               </Link>
             </div>
 

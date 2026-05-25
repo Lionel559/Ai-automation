@@ -127,10 +127,13 @@ export default function ProductDescriptionPage() {
       }
 
       setDescription(data.description);
+      window.dispatchEvent(new Event("aiflow:generation-saved"));
     } catch (error) {
       console.log(error);
       setError(
-        "Could not generate product descriptions right now. Please try again."
+        error instanceof Error
+          ? error.message
+          : "Could not generate product descriptions right now. Please try again."
       );
     } finally {
       setLoading(false);

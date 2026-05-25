@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+import { AuthSessionProvider } from "@/components/auth/session-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
@@ -16,9 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <TooltipProvider>
-          {children}
-        </TooltipProvider>
+        <AuthSessionProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </AuthSessionProvider>
       </body>
     </html>
   );

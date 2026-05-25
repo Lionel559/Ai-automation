@@ -108,9 +108,14 @@ export default function FAQPage() {
       }
 
       setAnswer(data.answer);
+      window.dispatchEvent(new Event("aiflow:generation-saved"));
     } catch (error) {
       console.log(error);
-      setError("Could not generate an answer right now. Please try again.");
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Could not generate an answer right now. Please try again."
+      );
     } finally {
       setLoading(false);
     }
