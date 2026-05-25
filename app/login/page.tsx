@@ -15,7 +15,7 @@ export default function LoginPage() {
       title="Welcome back"
       subtitle="Log in to manage your automations and keep business tasks moving."
       primaryAction="Log in"
-      googleAction="Log in with Google"
+      googleAction="Continue with Google"
       footerText="New to AIFLOW?"
       footerHref="/register"
       footerLink="Create an account"
