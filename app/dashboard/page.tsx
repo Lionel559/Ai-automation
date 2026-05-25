@@ -7,10 +7,10 @@ import {
   DashboardUsageStatValue,
   DashboardUsageSummary,
 } from "@/components/auth/dashboard-auth";
+import { NotificationBell } from "@/components/dashboard/notification-bell";
 
 import {
   ArrowRight,
-  Bell,
   Bot,
   Clock3,
   Crown,
@@ -170,12 +170,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="flex items-center justify-end gap-3">
-                <button className="relative flex h-12 w-12 items-center justify-center rounded-full border border-[#E2E8F0] bg-white shadow-sm transition hover:border-[#0EA5E9]">
-                  <Bell size={20} className="text-[#0F172A]" />
-                  <span className="absolute right-0 top-0 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-[#0EA5E9] text-[10px] font-bold text-white">
-                    2
-                  </span>
-                </button>
+                <NotificationBell />
 
                 <DashboardUserMenu />
               </div>

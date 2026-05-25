@@ -120,6 +120,17 @@ const defaultItems: LineItem[] = [
 
 const taxRate = 0.075;
 
+function createInvoiceNumber(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+
+  return `INV-${year}${month}${day}-${hours}${minutes}${seconds}`;
+}
+
 export default function InvoicePage() {
   const [business, setBusiness] = useState("");
   const [customer, setCustomer] = useState("");
@@ -207,6 +218,8 @@ export default function InvoicePage() {
   const generateInvoice = async () => {
     if (!canGenerate || loading) return;
 
+    const invoiceNumber = createInvoiceNumber();
+
     setLoading(true);
     setError("");
     setDownloaded(false);
@@ -235,6 +248,7 @@ export default function InvoicePage() {
 
       setInvoice({
         ...data.invoice,
+        invoiceNumber,
         business: data.invoice.business || business,
         customer: data.invoice.customer || customer,
         item: itemSummary,
@@ -811,7 +825,7 @@ function getItemDescription(value: string, index: number) {
 
 function formatInvoiceNumber(value: string) {
   const normalized = normalizeDisplayText(value).trim() || "INV-0001";
-  return normalized.startsWith("#") ? normalized : `#${normalized}`;
+  return normalized.replace(/^#\s*/, "");
 }
 
 function AiflowLogo({ compact = false }: { compact?: boolean }) {
