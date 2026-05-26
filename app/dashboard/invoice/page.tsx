@@ -142,6 +142,7 @@ export default function InvoicePage() {
   const [currencyCode, setCurrencyCode] = useState<CurrencyCode>("NGN");
   const [items, setItems] = useState<LineItem[]>(defaultItems);
   const [invoice, setInvoice] = useState<GeneratedInvoice | null>(null);
+  const [receiptGenerated, setReceiptGenerated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -204,8 +205,65 @@ export default function InvoicePage() {
     )
     .join(", ");
 
+  const markReceiptAsNotGenerated = () => {
+    setReceiptGenerated(false);
+    setDownloaded(false);
+  };
+
+  const updateBusiness = (value: string) => {
+    const nextValue = sanitizeNameInput(value);
+    if (nextValue !== business) {
+      markReceiptAsNotGenerated();
+    }
+    setBusiness(nextValue);
+  };
+
+  const updateCustomer = (value: string) => {
+    const nextValue = sanitizeNameInput(value);
+    if (nextValue !== customer) {
+      markReceiptAsNotGenerated();
+    }
+    setCustomer(nextValue);
+  };
+
+  const updateInvoiceDate = (value: string) => {
+    if (value !== invoiceDate) {
+      markReceiptAsNotGenerated();
+    }
+    setInvoiceDate(value);
+  };
+
+  const updateInvoiceTime = (value: string) => {
+    if (value !== invoiceTime) {
+      markReceiptAsNotGenerated();
+    }
+    setInvoiceTime(value);
+  };
+
+  const updatePaymentMethod = (value: PaymentMethod) => {
+    if (value !== paymentMethod) {
+      markReceiptAsNotGenerated();
+    }
+    setPaymentMethod(value);
+  };
+
+  const updateCurrencyCode = (value: CurrencyCode) => {
+    if (value !== currencyCode) {
+      markReceiptAsNotGenerated();
+    }
+    setCurrencyCode(value);
+  };
+
+  const updateStatus = (value: InvoiceStatus) => {
+    if (value !== status) {
+      markReceiptAsNotGenerated();
+    }
+    setStatus(value);
+  };
+
   const previewInvoice = {
-    invoiceNumber: invoice?.invoiceNumber || "INV-0001",
+    invoiceNumber:
+      receiptGenerated && invoice ? invoice.invoiceNumber : "INV-0001",
     date: invoiceDate || invoice?.date || "Select date",
     time: invoiceTime || "Select time",
     business: business || invoice?.business || "Business Name",
@@ -253,6 +311,7 @@ export default function InvoicePage() {
         amount: formatMoney(totals.total, currency),
         date: invoiceDate || data.invoice.date,
       });
+      setReceiptGenerated(true);
       window.dispatchEvent(new Event("aiflow:generation-saved"));
     } catch (error) {
       console.log(error);
@@ -282,6 +341,7 @@ export default function InvoicePage() {
       setLogoDataUrl(reader.result);
       setLogoName(file.name);
       setLogoError("");
+      markReceiptAsNotGenerated();
     };
 
     reader.onerror = () => {
@@ -306,6 +366,7 @@ export default function InvoicePage() {
     setLogoDataUrl("");
     setLogoName("");
     setLogoError("");
+    markReceiptAsNotGenerated();
   };
 
   const updateItem = (
@@ -313,6 +374,7 @@ export default function InvoicePage() {
     field: "name" | "quantity" | "price",
     value: string
   ) => {
+    markReceiptAsNotGenerated();
     setItems((currentItems) =>
       currentItems.map((item) =>
         item.id === id
@@ -326,6 +388,7 @@ export default function InvoicePage() {
   };
 
   const addItem = () => {
+    markReceiptAsNotGenerated();
     setItems((currentItems) => [
       ...currentItems,
       {
@@ -338,6 +401,7 @@ export default function InvoicePage() {
   };
 
   const removeItem = (id: string) => {
+    markReceiptAsNotGenerated();
     setItems((currentItems) =>
       currentItems.length === 1
         ? defaultItems
@@ -346,7 +410,7 @@ export default function InvoicePage() {
   };
 
   const downloadInvoice = async () => {
-    if (!invoiceRef.current) return;
+    if (!receiptGenerated || !invoiceRef.current) return;
 
     try {
       const dataUrl = await toPng(invoiceRef.current, {
@@ -518,25 +582,25 @@ export default function InvoicePage() {
                     placeholder="Your business name"
                     value={business}
                     helperText="Letters only"
-                    onChange={(value) => setBusiness(sanitizeNameInput(value))}
+                    onChange={updateBusiness}
                   />
                   <Field
                     label="Customer Name"
                     placeholder="Customer or client name"
                     value={customer}
                     helperText="Letters only"
-                    onChange={(value) => setCustomer(sanitizeNameInput(value))}
+                    onChange={updateCustomer}
                   />
                   <DateTimeField
                     date={invoiceDate}
-                    onDateChange={setInvoiceDate}
-                    onTimeChange={setInvoiceTime}
+                    onDateChange={updateInvoiceDate}
+                    onTimeChange={updateInvoiceTime}
                     time={invoiceTime}
                   />
                   <SelectField
                     label="Payment Method"
                     value={paymentMethod}
-                    onChange={(value) => setPaymentMethod(value as PaymentMethod)}
+                    onChange={(value) => updatePaymentMethod(value as PaymentMethod)}
                     options={paymentMethods.map((method) => ({
                       label: method,
                       value: method,
@@ -545,7 +609,7 @@ export default function InvoicePage() {
                   <SelectField
                     label="Currency"
                     value={currencyCode}
-                    onChange={(value) => setCurrencyCode(value as CurrencyCode)}
+                    onChange={(value) => updateCurrencyCode(value as CurrencyCode)}
                     options={currencies.map((item) => ({
                       label: getCurrencyLabel(item),
                       value: item.code,
@@ -583,7 +647,7 @@ export default function InvoicePage() {
                       <button
                         key={item.value}
                         type="button"
-                        onClick={() => setStatus(item.value)}
+                        onClick={() => updateStatus(item.value)}
                         className={[
                           "min-h-[76px] rounded-[16px] border px-4 py-3 text-left transition",
                           status === item.value
@@ -618,35 +682,42 @@ export default function InvoicePage() {
                   </div>
                 ) : null}
 
-                <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                  <button
-                    type="button"
-                    onClick={generateInvoice}
-                    disabled={loading || !canGenerate}
-                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[14px] bg-[#0F172A] px-5 text-sm font-bold text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] transition hover:bg-[#1E293B] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-                  >
-                    {loading ? (
-                      <>
-                        <LoadingDot />
-                        Generating invoice
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles size={17} />
-                        Generate Invoice
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={downloadInvoice}
-                    disabled={!canGenerate}
-                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-5 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] hover:text-[#0369A1] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-                  >
-                    <Download size={17} className="text-[#0EA5E9]" />
-                    Download PNG
-                  </button>
+                <div className="mt-7">
+                  {!receiptGenerated ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={generateInvoice}
+                        disabled={loading || !canGenerate}
+                        className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[14px] bg-[#0F172A] px-5 text-sm font-bold text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] transition hover:bg-[#1E293B] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                      >
+                        {loading ? (
+                          <>
+                            <LoadingDot />
+                            Generating receipt
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles size={17} />
+                            Generate Receipt
+                          </>
+                        )}
+                      </button>
+                      <p className="mt-2 text-xs font-semibold text-slate-500">
+                        Generate the receipt before downloading.
+                      </p>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={downloadInvoice}
+                      disabled={!canGenerate}
+                      className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[14px] border border-[#CBD5E1] bg-white px-5 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] hover:text-[#0369A1] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                    >
+                      <Download size={17} className="text-[#0EA5E9]" />
+                      Download Receipt
+                    </button>
+                  )}
                 </div>
               </div>
 
