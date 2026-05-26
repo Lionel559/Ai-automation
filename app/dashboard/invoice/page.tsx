@@ -184,16 +184,19 @@ export default function InvoicePage() {
     };
   }, [normalizedItems]);
 
-  const validItems = normalizedItems.filter(
-    (item) => item.name.trim() && item.quantityValue > 0 && item.priceValue > 0
+  const describedItems = normalizedItems.filter((item) => item.name.trim());
+
+  const validItems = describedItems.filter(
+    (item) => item.quantityValue > 0 && item.priceValue > 0
   );
 
   const canGenerate =
     Boolean(business.trim()) &&
     Boolean(customer.trim()) &&
-    Boolean(invoiceDate) &&
-    Boolean(invoiceTime) &&
-    validItems.length > 0;
+    describedItems.length > 0 &&
+    describedItems.every(
+      (item) => item.quantityValue > 0 && item.priceValue > 0
+    );
 
   const itemSummary = validItems
     .map(
@@ -271,8 +274,43 @@ export default function InvoicePage() {
     message: getReceiptNote(status),
   };
 
-  const generateInvoice = async () => {
-    if (!canGenerate || loading) return;
+  const validateReceiptFields = () => {
+    if (!business.trim()) {
+      return "Enter a business name before generating the receipt.";
+    }
+
+    if (!customer.trim()) {
+      return "Enter a customer name before generating the receipt.";
+    }
+
+    if (describedItems.length === 0) {
+      return "Add at least one item description before generating the receipt.";
+    }
+
+    if (describedItems.some((item) => item.quantityValue <= 0)) {
+      return "Quantity must be greater than 0 for every described item.";
+    }
+
+    if (describedItems.some((item) => item.priceValue <= 0)) {
+      return "Price must be greater than 0 for every described item.";
+    }
+
+    return "";
+  };
+
+  const handleGenerateReceipt = () => {
+    console.log("Generating receipt");
+
+    if (loading) return;
+
+    const validationError = validateReceiptFields();
+
+    if (validationError) {
+      setError(validationError);
+      setReceiptGenerated(false);
+      setDownloaded(false);
+      return;
+    }
 
     const invoiceNumber = createInvoiceNumber();
 
@@ -280,49 +318,17 @@ export default function InvoicePage() {
     setError("");
     setDownloaded(false);
     setCopied(false);
-
-    try {
-      const res = await fetch("/api/invoice", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          business,
-          customer,
-          item: itemSummary,
-          amount: formatMoney(totals.total, currency),
-          date: invoiceDate,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data.invoice) {
-        throw new Error(data.message || "Invoice generation failed.");
-      }
-
-      setInvoice({
-        ...data.invoice,
-        invoiceNumber,
-        business: data.invoice.business || business,
-        customer: data.invoice.customer || customer,
-        item: itemSummary,
-        amount: formatMoney(totals.total, currency),
-        date: invoiceDate || data.invoice.date,
-      });
-      setReceiptGenerated(true);
-      window.dispatchEvent(new Event("aiflow:generation-saved"));
-    } catch (error) {
-      console.log(error);
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Could not generate the invoice right now. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
+    setInvoice({
+      invoiceNumber,
+      business,
+      customer,
+      item: itemSummary,
+      amount: formatMoney(totals.total, currency),
+      date: invoiceDate,
+      message: getReceiptNote(status),
+    });
+    setReceiptGenerated(true);
+    setLoading(false);
   };
 
   const handleLogoFile = (file?: File) => {
@@ -687,8 +693,8 @@ export default function InvoicePage() {
                     <>
                       <button
                         type="button"
-                        onClick={generateInvoice}
-                        disabled={loading || !canGenerate}
+                        onClick={handleGenerateReceipt}
+                        disabled={loading}
                         className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[14px] bg-[#0F172A] px-5 text-sm font-bold text-white shadow-[0_12px_24px_rgba(15,23,42,0.18)] transition hover:bg-[#1E293B] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                       >
                         {loading ? (
