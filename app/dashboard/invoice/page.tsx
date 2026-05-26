@@ -121,14 +121,13 @@ const defaultItems: LineItem[] = [
 const taxRate = 0.075;
 
 function createInvoiceNumber(date = new Date()) {
-  const year = date.getFullYear();
+  const year = String(date.getFullYear()).slice(-2);
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
-  const seconds = String(date.getSeconds()).padStart(2, "0");
 
-  return `INV-${year}${month}${day}-${hours}${minutes}${seconds}`;
+  return `INV-${year}${month}${day}-${hours}${minutes}`;
 }
 
 export default function InvoicePage() {
@@ -1458,50 +1457,48 @@ function PremiumInvoicePreview({
         ) : null}
 
         <div className="relative z-10">
-          <header className="flex flex-col gap-7 border-b border-[#D7E0EA] pb-8 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-start">
-              <div
-                className={[
-                  "flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-[10px]",
-                  logoDataUrl
-                    ? "border border-[#E2E8F0] bg-white p-2 shadow-[0_10px_24px_rgba(15,23,42,0.08)]"
-                    : "bg-[#0F172A] p-3 text-3xl font-black text-[#C9A227] shadow-[0_14px_30px_rgba(15,23,42,0.12)]",
-                ].join(" ")}
-              >
-                {logoDataUrl ? (
-                  <img
-                    src={logoDataUrl}
-                    alt="Business logo"
-                    className="max-h-full max-w-full object-contain"
-                  />
-                ) : (
-                  <span>{getBusinessInitial(businessName)}</span>
-                )}
-              </div>
-
-              <div className="min-w-0 pt-1">
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-[#475569]">
-                  FROM
-                </p>
-                <h2 className="mt-6 break-words text-3xl font-black leading-tight text-[#0F172A] sm:text-4xl">
-                  {businessName}
-                </h2>
-                <p className="mt-3 max-w-sm text-base leading-7 text-[#475569]">
-                  Business receipt
-                  <br />
-                  Receipt issued in Lagos, Nigeria
-                </p>
-              </div>
+          <header className="grid min-w-0 grid-cols-1 gap-6 border-b border-[#D7E0EA] pb-8 lg:grid-cols-[96px_minmax(0,1fr)_minmax(180px,240px)] lg:items-start lg:gap-7 xl:grid-cols-[96px_minmax(0,1fr)_minmax(190px,260px)]">
+            <div
+              className={[
+                "flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-[10px]",
+                logoDataUrl
+                  ? "border border-[#E2E8F0] bg-white p-2 shadow-[0_10px_24px_rgba(15,23,42,0.08)]"
+                  : "bg-[#0F172A] p-3 text-3xl font-black text-[#C9A227] shadow-[0_14px_30px_rgba(15,23,42,0.12)]",
+              ].join(" ")}
+            >
+              {logoDataUrl ? (
+                <img
+                  src={logoDataUrl}
+                  alt="Business logo"
+                  className="max-h-full max-w-full object-contain"
+                />
+              ) : (
+                <span>{getBusinessInitial(businessName)}</span>
+              )}
             </div>
 
-            <div className="min-w-0 sm:shrink-0 sm:text-right">
+            <div className="min-w-0 max-w-full pt-1 lg:max-w-[34rem] xl:max-w-[40rem]">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#475569]">
+                FROM
+              </p>
+              <h2 className="mt-5 max-w-full whitespace-normal break-words text-2xl font-black leading-tight text-[#0F172A] [overflow-wrap:anywhere] sm:text-3xl lg:text-4xl">
+                {businessName}
+              </h2>
+              <p className="mt-3 max-w-sm text-base leading-7 text-[#475569]">
+                Business receipt
+                <br />
+                Receipt issued in Lagos, Nigeria
+              </p>
+            </div>
+
+            <div className="min-w-0 max-w-full lg:justify-self-end lg:text-right">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-[#475569]">
                 RECEIPT
               </p>
-              <p className="mt-6 break-words text-3xl font-black leading-tight text-[#0F172A] sm:text-4xl">
+              <p className="mt-5 max-w-full whitespace-normal break-words text-xl font-black leading-tight text-[#0F172A] [overflow-wrap:anywhere] sm:text-2xl lg:text-3xl">
                 {formatInvoiceNumber(invoice.invoiceNumber)}
               </p>
-              <div className="mt-5 flex sm:justify-end">
+              <div className="mt-5 flex min-w-0 lg:justify-end">
                 <ReceiptStatusBadge status={status} />
               </div>
             </div>
