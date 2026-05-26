@@ -210,9 +210,7 @@ export default function InvoicePage() {
     time: invoiceTime || "Select time",
     business: business || invoice?.business || "Business Name",
     customer: customer || invoice?.customer || "Customer Name",
-    message:
-      invoice?.message ||
-      "Thank you for your business. Please make payment using the selected payment method.",
+    message: getReceiptNote(status),
   };
 
   const generateInvoice = async () => {
@@ -398,7 +396,7 @@ export default function InvoicePage() {
   };
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#F8FAFC] px-4 py-6 text-[#0F172A] sm:px-6 lg:px-10">
+    <main className="min-h-screen w-full overflow-x-hidden bg-[#F8FAFC] px-3 py-4 text-[#0F172A] sm:px-5 sm:py-6 lg:px-8 2xl:px-10">
       {downloaded ? (
         <div className="fixed right-4 top-4 z-50 flex items-center gap-3 rounded-[18px] border border-[#BAE6FD] bg-white px-4 py-3 text-sm font-bold text-[#0F172A] shadow-[0_18px_42px_rgba(15,23,42,0.14)]">
           <div className="flex h-9 w-9 items-center justify-center rounded-[13px] bg-[#F0F9FF] text-[#0EA5E9]">
@@ -408,7 +406,7 @@ export default function InvoicePage() {
         </div>
       ) : null}
 
-      <div className="mx-auto w-full max-w-[1500px]">
+      <div className="w-full">
             <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="hidden">
                 <Link href="/" className="flex items-center gap-3">
@@ -416,7 +414,7 @@ export default function InvoicePage() {
                 </Link>
               </div>
 
-              <div className="flex h-12 w-full items-center gap-3 rounded-[16px] border border-[#E2E8F0] bg-white px-4 shadow-sm sm:max-w-md">
+              <div className="flex h-12 w-full items-center gap-3 rounded-[16px] border border-[#E2E8F0] bg-white px-4 shadow-sm sm:max-w-xl xl:max-w-2xl">
                 <Search size={18} className="text-slate-400" />
                 <span className="text-sm font-medium text-slate-400">
                   Search anything...
@@ -453,7 +451,7 @@ export default function InvoicePage() {
             </div>
 
             <section className="mt-5 overflow-hidden rounded-[24px] border border-[#E2E8F0] bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)] sm:rounded-[28px]">
-              <div className="grid gap-8 p-5 sm:p-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,400px)] xl:items-center">
+              <div className="grid gap-8 p-5 sm:p-8 xl:grid-cols-[minmax(0,1fr)_minmax(320px,420px)] xl:items-center">
                 <div>
                   <div className="inline-flex items-center gap-2 rounded-full border border-[#BAE6FD] bg-[#F0F9FF] px-3 py-1 text-sm font-semibold text-[#0369A1]">
                     <Sparkles size={15} />
@@ -499,8 +497,8 @@ export default function InvoicePage() {
               </div>
             </section>
 
-            <section className="mt-6 grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,520px)_minmax(0,1fr)]">
-              <div className="min-w-0 rounded-[28px] border border-[#E2E8F0] bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)] sm:p-6">
+            <section className="mt-6 grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(380px,500px)_minmax(0,1fr)] xl:gap-6 2xl:grid-cols-[minmax(420px,540px)_minmax(0,1fr)]">
+              <div className="h-fit min-w-0 rounded-[28px] border border-[#E2E8F0] bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)] sm:p-6">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#0EA5E9]">
                     Builder
@@ -652,8 +650,8 @@ export default function InvoicePage() {
                 </div>
               </div>
 
-              <div className="w-full min-w-0 space-y-5">
-                <div className="w-full min-w-0 rounded-[28px] border border-[#E2E8F0] bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)] sm:p-6">
+              <div className="w-full min-w-0 space-y-5 xl:sticky xl:top-6">
+                <div className="w-full min-w-0 rounded-[28px] border border-[#E2E8F0] bg-white p-4 shadow-[0_16px_40px_rgba(15,23,42,0.06)] sm:p-5 2xl:p-6">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#0EA5E9]">
@@ -685,7 +683,7 @@ export default function InvoicePage() {
 
                   {loading ? <LoadingState /> : null}
 
-                  <div className="-mx-2 overflow-x-auto px-2 sm:mx-0 sm:px-0">
+                  <div className="min-w-0">
                     <PremiumInvoicePreview
                       currency={currency}
                       invoice={previewInvoice}
@@ -811,6 +809,22 @@ function getPaymentNote(method: PaymentMethod, status: InvoiceStatus) {
   if (method === "Crypto") return "Crypto payment confirmed";
 
   return "Transfer confirmed";
+}
+
+function getReceiptNote(status: string) {
+  if (status === "Paid") {
+    return "Your payment has been successfully received. Thank you for your business!";
+  }
+
+  if (status === "Pending") {
+    return "Thank you for your business. Please complete payment using the selected payment method.";
+  }
+
+  if (status === "Draft") {
+    return "This receipt is currently a draft. Payment details will be confirmed once finalized.";
+  }
+
+  return "Thank you for your business.";
 }
 
 function getBusinessInitial(value: string) {
@@ -1265,7 +1279,7 @@ function SummarySection({
         <StatusBadge status={status} />
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <SummaryItem label="Customer" value={customer} />
         <SummaryItem label="Issued" value={`${date} · ${time}`} />
         <SummaryItem label="Payment" value={paymentMethod} />
@@ -1347,19 +1361,20 @@ function PremiumInvoicePreview({
     invoice.time,
     paymentMethod
   );
+  const receiptNote = getReceiptNote(status);
 
   return (
     <div
       ref={invoiceRef}
-      className="relative mt-6 w-full min-w-[640px] rounded-[28px] bg-[#E8EEF6] p-3 text-[#0F172A] sm:min-w-0 sm:rounded-[34px] sm:p-5"
+      className="relative mx-auto mt-5 w-full max-w-[1100px] rounded-[24px] bg-[#E8EEF6] p-2 text-[#0F172A] sm:rounded-[30px] sm:p-4 lg:p-5"
     >
-      <article className="relative overflow-hidden rounded-[30px] bg-white px-5 py-7 shadow-[0_28px_90px_rgba(15,23,42,0.16)] sm:px-8 sm:py-9 lg:p-12">
+      <article className="relative overflow-hidden rounded-[22px] bg-white px-4 pb-9 pt-6 shadow-[0_28px_90px_rgba(15,23,42,0.16)] sm:rounded-[28px] sm:px-7 sm:pb-10 sm:pt-8 xl:px-10 xl:pb-12 xl:pt-10 2xl:px-12 2xl:pb-14 2xl:pt-12">
         {!logoDataUrl ? (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-[56%] z-0 flex w-[82%] -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+            className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center px-6"
           >
-            <p className="max-w-full -rotate-12 break-words text-center text-4xl font-black uppercase leading-none text-[#0F172A] opacity-[0.045] sm:text-6xl lg:text-7xl">
+            <p className="max-w-full -rotate-12 break-words text-center text-3xl font-black uppercase leading-none text-[#0F172A] opacity-[0.035] sm:text-5xl lg:text-6xl xl:text-7xl">
               {businessName}
             </p>
           </div>
@@ -1419,12 +1434,12 @@ function PremiumInvoicePreview({
             {logoDataUrl ? (
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute left-1/2 top-[56%] z-0 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+                className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
               >
                 <img
                   src={logoDataUrl}
                   alt=""
-                  className="h-40 w-40 -rotate-6 object-contain opacity-[0.055] sm:h-52 sm:w-52 lg:h-56 lg:w-56"
+                  className="h-32 w-32 -rotate-6 object-contain opacity-[0.04] sm:h-44 sm:w-44 lg:h-52 lg:w-52 2xl:h-60 2xl:w-60"
                 />
               </div>
             ) : null}
@@ -1498,7 +1513,7 @@ function PremiumInvoicePreview({
                   NOTES
                 </p>
                 <p className="mt-5 max-w-xl text-base leading-7 text-[#334155]">
-                  {normalizeDisplayText(invoice.message)}
+                  {receiptNote}
                 </p>
               </section>
 
@@ -1529,11 +1544,11 @@ function PremiumInvoicePreview({
             </div>
           </div>
 
-          <footer className="mt-10 flex flex-col gap-6 border-t border-[#D7E0EA] pt-8 sm:flex-row sm:items-start sm:justify-between">
-            <p className="max-w-2xl text-sm leading-7 text-[#475569]">
+          <footer className="mt-10 flex flex-col gap-7 border-t border-[#D7E0EA] pb-1 pt-8 sm:mt-12 sm:flex-row sm:items-start sm:justify-between sm:gap-8 sm:pb-2">
+            <p className="max-w-2xl text-sm leading-7 text-[#475569] sm:pr-8">
               Payment Ref: {paymentReference}. Thank you for your business.
             </p>
-            <div className="sm:text-right">
+            <div className="min-w-0 sm:shrink-0 sm:text-right">
               <p className="break-words text-lg font-black text-[#0F172A]">
                 {businessName}
               </p>

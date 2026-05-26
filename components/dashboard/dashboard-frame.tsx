@@ -82,14 +82,19 @@ const navItems: NavItem[] = [
 export function DashboardFrame({ children }: DashboardFrameProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isInvoiceWorkspace =
+    pathname === "/dashboard/invoice" ||
+    pathname.startsWith("/dashboard/invoice/");
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#F8FAFC] text-[#0F172A]">
       <div className="flex min-h-screen min-w-0">
-        <DashboardSidebar pathname={pathname} />
+        {!isInvoiceWorkspace ? <DashboardSidebar pathname={pathname} /> : null}
 
         <div className="min-w-0 flex-1">
-          <MobileTopbar onOpenMenu={() => setMobileMenuOpen(true)} />
+          {!isInvoiceWorkspace ? (
+            <MobileTopbar onOpenMenu={() => setMobileMenuOpen(true)} />
+          ) : null}
 
           <div className="min-w-0 [&_aside]:hidden [&_main]:min-w-0 [&_section]:min-w-0">
             {children}
@@ -97,7 +102,7 @@ export function DashboardFrame({ children }: DashboardFrameProps) {
         </div>
       </div>
 
-      {mobileMenuOpen ? (
+      {mobileMenuOpen && !isInvoiceWorkspace ? (
         <div className="fixed inset-0 z-50 lg:hidden">
           <button
             type="button"
