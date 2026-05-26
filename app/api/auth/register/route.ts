@@ -2,50 +2,57 @@ import { hash } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
+import { forbiddenOriginResponse, isAllowedOrigin } from "@/lib/csrf";
 import connectToDatabase from "@/lib/mongodb";
+import {
+  getClientIp,
+  rateLimit,
+  rateLimitExceededResponse,
+} from "@/lib/rate-limit";
+import {
+  invalidInputResponse,
+  registerSchema,
+  validateJsonRequest,
+} from "@/lib/validations/api";
 import User from "@/models/User";
 
 export const runtime = "nodejs";
 
 const tokenMaxAge = 60 * 60 * 24 * 7;
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const registerLimit = 5;
+const registerWindowMs = 30 * 60 * 1000;
+const tooManyRequestsMessage = "Too many requests. Please try again later.";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password } = await req.json();
+    if (!isAllowedOrigin(req)) {
+      return forbiddenOriginResponse();
+    }
 
-    const normalizedName = typeof name === "string" ? name.trim() : "";
-    const normalizedEmail =
-      typeof email === "string" ? email.trim().toLowerCase() : "";
-    const normalizedPassword = typeof password === "string" ? password : "";
+    const limitResult = rateLimit(
+      `auth:register:${getClientIp(req)}`,
+      registerLimit,
+      registerWindowMs
+    );
 
-    if (!normalizedName || !normalizedEmail || !normalizedPassword) {
-      return NextResponse.json(
-        { success: false, message: "Name, email, and password are required." },
-        { status: 400 }
+    if (!limitResult.allowed) {
+      return rateLimitExceededResponse(
+        tooManyRequestsMessage,
+        limitResult.retryAfter
       );
     }
 
-    if (!emailPattern.test(normalizedEmail)) {
-      return NextResponse.json(
-        { success: false, message: "Please enter a valid email address." },
-        { status: 400 }
-      );
+    const validation = await validateJsonRequest(req, registerSchema);
+
+    if (!validation.success) {
+      return invalidInputResponse();
     }
 
-    if (normalizedPassword.length < 6) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Password must be at least 6 characters long.",
-        },
-        { status: 400 }
-      );
-    }
+    const { email, name, password } = validation.data;
 
     await connectToDatabase();
 
-    const existingUser = await User.findOne({ email: normalizedEmail });
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return NextResponse.json(
@@ -54,11 +61,11 @@ export async function POST(req: Request) {
       );
     }
 
-    const hashedPassword = await hash(normalizedPassword, 12);
+    const hashedPassword = await hash(password, 12);
 
     const user = await User.create({
-      name: normalizedName,
-      email: normalizedEmail,
+      name,
+      email,
       password: hashedPassword,
       provider: "credentials",
       plan: "free",

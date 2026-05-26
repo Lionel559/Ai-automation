@@ -3,39 +3,57 @@ import { createHash } from "node:crypto";
 import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 
+import { forbiddenOriginResponse, isAllowedOrigin } from "@/lib/csrf";
 import connectToDatabase from "@/lib/mongodb";
+import {
+  getClientIp,
+  rateLimit,
+  rateLimitExceededResponse,
+} from "@/lib/rate-limit";
+import {
+  invalidInputResponse,
+  resetPasswordSchema,
+  validateJsonRequest,
+} from "@/lib/validations/api";
 import User from "@/models/User";
 
 export const runtime = "nodejs";
 
+const genericSuccessMessage = "Password reset successfully.";
+const resetPasswordLimit = 5;
+const resetPasswordWindowMs = 30 * 60 * 1000;
+const tooManyRequestsMessage = "Too many requests. Please try again later.";
+
 export async function POST(req: Request) {
   try {
-    const { token, newPassword } = await req.json();
+    if (!isAllowedOrigin(req)) {
+      return forbiddenOriginResponse();
+    }
 
-    const normalizedToken = typeof token === "string" ? token.trim() : "";
-    const normalizedPassword =
-      typeof newPassword === "string" ? newPassword : "";
+    const limitResult = rateLimit(
+      `auth:reset-password:${getClientIp(req)}`,
+      resetPasswordLimit,
+      resetPasswordWindowMs
+    );
 
-    if (!normalizedToken || !normalizedPassword) {
-      return NextResponse.json(
-        { success: false, message: "Token and new password are required." },
-        { status: 400 }
+    if (!limitResult.allowed) {
+      return rateLimitExceededResponse(
+        tooManyRequestsMessage,
+        limitResult.retryAfter
       );
     }
 
-    if (normalizedPassword.length < 6) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Password must be at least 6 characters long.",
-        },
-        { status: 400 }
-      );
+    const validation = await validateJsonRequest(req, resetPasswordSchema);
+
+    if (!validation.success) {
+      return invalidInputResponse();
     }
+
+    const { newPassword, token } = validation.data;
 
     await connectToDatabase();
 
-    const resetToken = hashResetToken(normalizedToken);
+    const resetToken = hashResetToken(token);
     const resetTokenExpiry = { $gt: new Date() };
     const user = await User.findOne({
       resetToken,
@@ -46,7 +64,7 @@ export async function POST(req: Request) {
       return invalidTokenResponse();
     }
 
-    const hashedPassword = await hash(normalizedPassword, 12);
+    const hashedPassword = await hash(newPassword, 12);
     const updateResult = await User.updateOne(
       {
         _id: user._id,
@@ -70,7 +88,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      message: "Password reset successfully.",
+      message: genericSuccessMessage,
     });
   } catch (error) {
     console.log(error);

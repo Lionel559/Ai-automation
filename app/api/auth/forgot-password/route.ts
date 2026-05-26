@@ -2,44 +2,62 @@ import { createHash, randomBytes } from "node:crypto";
 
 import { NextResponse } from "next/server";
 
+import { forbiddenOriginResponse, isAllowedOrigin } from "@/lib/csrf";
 import connectToDatabase from "@/lib/mongodb";
+import {
+  getClientIp,
+  rateLimit,
+  rateLimitExceededResponse,
+} from "@/lib/rate-limit";
+import {
+  forgotPasswordSchema,
+  invalidInputResponse,
+  validateJsonRequest,
+} from "@/lib/validations/api";
 import User from "@/models/User";
 
 export const runtime = "nodejs";
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const resetTokenLifetimeMs = 60 * 60 * 1000;
+const forgotPasswordLimit = 3;
+const forgotPasswordWindowMs = 30 * 60 * 1000;
+const genericSuccessMessage =
+  "If an account exists, a reset link has been sent.";
+const tooManyRequestsMessage = "Too many requests. Please try again later.";
 
 export async function POST(req: Request) {
   try {
-    const { email } = await req.json();
+    if (!isAllowedOrigin(req)) {
+      return forbiddenOriginResponse();
+    }
 
-    const normalizedEmail =
-      typeof email === "string" ? email.trim().toLowerCase() : "";
+    const limitResult = rateLimit(
+      `auth:forgot-password:${getClientIp(req)}`,
+      forgotPasswordLimit,
+      forgotPasswordWindowMs
+    );
 
-    if (!normalizedEmail) {
-      return NextResponse.json(
-        { success: false, message: "Email address is required." },
-        { status: 400 }
+    if (!limitResult.allowed) {
+      return rateLimitExceededResponse(
+        tooManyRequestsMessage,
+        limitResult.retryAfter
       );
     }
 
-    if (!emailPattern.test(normalizedEmail)) {
-      return NextResponse.json(
-        { success: false, message: "Please enter a valid email address." },
-        { status: 400 }
-      );
+    const validation = await validateJsonRequest(req, forgotPasswordSchema);
+
+    if (!validation.success) {
+      return invalidInputResponse();
     }
+
+    const { email } = validation.data;
 
     await connectToDatabase();
 
-    const user = await User.findOne({ email: normalizedEmail });
+    const user = await User.findOne({ email });
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, message: "No account found with this email." },
-        { status: 404 }
-      );
+      return genericSuccessResponse();
     }
 
     const resetToken = randomBytes(32).toString("hex");
@@ -57,22 +75,16 @@ export async function POST(req: Request) {
 
     const resetUrl = buildResetUrl(req, resetToken);
 
+    // Never return reset tokens to the browser; log local links only for dev.
     if (process.env.NODE_ENV !== "production") {
       console.log(`AIFLOW password reset link: ${resetUrl}`);
     }
 
-    return NextResponse.json({
-      success: true,
-      message: "Password reset link generated.",
-      resetUrl,
-    });
+    return genericSuccessResponse();
   } catch (error) {
     console.log(error);
 
-    return NextResponse.json(
-      { success: false, message: "Could not generate reset link." },
-      { status: 500 }
-    );
+    return genericSuccessResponse();
   }
 }
 
@@ -91,4 +103,11 @@ function buildResetUrl(req: Request, token: string) {
   resetUrl.searchParams.set("token", token);
 
   return resetUrl.toString();
+}
+
+function genericSuccessResponse() {
+  return NextResponse.json({
+    success: true,
+    message: genericSuccessMessage,
+  });
 }

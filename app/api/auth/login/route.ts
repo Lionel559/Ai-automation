@@ -2,41 +2,57 @@ import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
+import { forbiddenOriginResponse, isAllowedOrigin } from "@/lib/csrf";
 import connectToDatabase from "@/lib/mongodb";
+import {
+  getClientIp,
+  rateLimit,
+  rateLimitExceededResponse,
+} from "@/lib/rate-limit";
+import {
+  invalidInputResponse,
+  loginSchema,
+  validateJsonRequest,
+} from "@/lib/validations/api";
 import User from "@/models/User";
 
 export const runtime = "nodejs";
 
 const tokenMaxAge = 60 * 60 * 24 * 7;
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const loginLimit = 5;
+const loginWindowMs = 10 * 60 * 1000;
+const tooManyRequestsMessage = "Too many requests. Please try again later.";
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json();
+    if (!isAllowedOrigin(req)) {
+      return forbiddenOriginResponse();
+    }
 
-    const normalizedEmail =
-      typeof email === "string" ? email.trim().toLowerCase() : "";
-    const normalizedPassword = typeof password === "string" ? password : "";
+    const limitResult = rateLimit(
+      `auth:login:${getClientIp(req)}`,
+      loginLimit,
+      loginWindowMs
+    );
 
-    if (!normalizedEmail || !normalizedPassword) {
-      return NextResponse.json(
-        { success: false, message: "Email and password are required." },
-        { status: 400 }
+    if (!limitResult.allowed) {
+      return rateLimitExceededResponse(
+        tooManyRequestsMessage,
+        limitResult.retryAfter
       );
     }
 
-    if (!emailPattern.test(normalizedEmail)) {
-      return NextResponse.json(
-        { success: false, message: "Please enter a valid email address." },
-        { status: 400 }
-      );
+    const validation = await validateJsonRequest(req, loginSchema);
+
+    if (!validation.success) {
+      return invalidInputResponse();
     }
+
+    const { email, password } = validation.data;
 
     await connectToDatabase();
 
-    const user = await User.findOne({ email: normalizedEmail }).select(
-      "+password"
-    );
+    const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
       return NextResponse.json(
@@ -49,7 +65,7 @@ export async function POST(req: Request) {
       return invalidPasswordResponse();
     }
 
-    const passwordsMatch = await compare(normalizedPassword, user.password);
+    const passwordsMatch = await compare(password, user.password);
 
     if (!passwordsMatch) {
       return invalidPasswordResponse();

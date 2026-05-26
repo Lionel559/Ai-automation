@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getAuthenticatedUser } from "@/lib/auth";
+import { forbiddenOriginResponse, isAllowedOrigin } from "@/lib/csrf";
 import Notification from "@/models/Notification";
 
 export const runtime = "nodejs";
@@ -53,8 +54,12 @@ export async function GET() {
   }
 }
 
-export async function PATCH() {
+export async function PATCH(req: Request) {
   try {
+    if (!isAllowedOrigin(req)) {
+      return forbiddenOriginResponse();
+    }
+
     const user = await getAuthenticatedUser();
 
     if (!user) {

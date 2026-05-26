@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import {
   ArrowRight,
@@ -15,6 +16,35 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
+
+import { absoluteUrl, ogImagePath, siteDescription, siteTitle } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: siteTitle,
+  description: siteDescription,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: siteTitle,
+    description: siteDescription,
+    url: absoluteUrl("/"),
+    images: [
+      {
+        url: ogImagePath,
+        width: 1200,
+        height: 630,
+        alt: "AIFLOW AI automation platform for small businesses",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: [ogImagePath],
+  },
+};
 
 const features = [
   {

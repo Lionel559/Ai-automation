@@ -2,15 +2,20 @@ import { Types } from "mongoose";
 import { NextResponse } from "next/server";
 
 import { getAuthenticatedUser } from "@/lib/auth";
+import { forbiddenOriginResponse, isAllowedOrigin } from "@/lib/csrf";
 import Generation from "@/models/Generation";
 
 export const runtime = "nodejs";
 
 export async function DELETE(
-  _req: Request,
+  req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    if (!isAllowedOrigin(req)) {
+      return forbiddenOriginResponse();
+    }
+
     const user = await getAuthenticatedUser();
 
     if (!user) {

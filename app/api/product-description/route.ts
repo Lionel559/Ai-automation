@@ -2,7 +2,18 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
 import { getAuthenticatedUser } from "@/lib/auth";
+import { forbiddenOriginResponse, isAllowedOrigin } from "@/lib/csrf";
 import { saveGeneration } from "@/lib/generation-history";
+import {
+  getClientIp,
+  rateLimit,
+  rateLimitExceededResponse,
+} from "@/lib/rate-limit";
+import {
+  invalidInputResponse,
+  productDescriptionSchema,
+  validateJsonRequest,
+} from "@/lib/validations/api";
 import {
   dailyLimitReachedResponse,
   getGenerationUsage,
@@ -11,9 +22,29 @@ import {
 export const runtime = "nodejs";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const aiLimit = 20;
+const aiWindowMs = 10 * 60 * 1000;
+const tooManyAiRequestsMessage = "Too many AI requests. Please slow down.";
 
 export async function POST(req: Request) {
   try {
+    if (!isAllowedOrigin(req)) {
+      return forbiddenOriginResponse();
+    }
+
+    const limitResult = rateLimit(
+      `ai:${getClientIp(req)}`,
+      aiLimit,
+      aiWindowMs
+    );
+
+    if (!limitResult.allowed) {
+      return rateLimitExceededResponse(
+        tooManyAiRequestsMessage,
+        limitResult.retryAfter
+      );
+    }
+
     const user = await getAuthenticatedUser();
 
     if (!user) {
@@ -26,10 +57,20 @@ export async function POST(req: Request) {
       return dailyLimitReachedResponse();
     }
 
-    const { product, features, audience } = await req.json();
-    const productText = typeof product === "string" ? product : "";
-    const featuresText = typeof features === "string" ? features : "";
-    const audienceText = typeof audience === "string" ? audience : "";
+    const validation = await validateJsonRequest(
+      req,
+      productDescriptionSchema
+    );
+
+    if (!validation.success) {
+      return invalidInputResponse();
+    }
+
+    const {
+      audience: audienceText,
+      features: featuresText,
+      product: productText,
+    } = validation.data;
 
     const model = genAI.getGenerativeModel({
       model: "gemini-3.1-flash-lite",

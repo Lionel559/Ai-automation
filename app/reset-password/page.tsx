@@ -3,8 +3,12 @@ import type { Metadata } from "next";
 import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 
 export const metadata: Metadata = {
-  title: "Reset Password | AIFLOW",
+  title: "Reset Password",
   description: "Set a new password for your AIFLOW account.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 type ResetPasswordPageProps = {

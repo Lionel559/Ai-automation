@@ -11,6 +11,7 @@ import {
   FileText,
   Grid2X2,
   Headphones,
+  LogOut,
   Menu,
   MessageSquare,
   Package,
@@ -20,7 +21,10 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { DashboardUsageSummary } from "@/components/auth/dashboard-auth";
+import {
+  DashboardUsageSummary,
+  useDashboardAuth,
+} from "@/components/auth/dashboard-auth";
 
 type DashboardFrameProps = {
   children: ReactNode;
@@ -131,11 +135,15 @@ export function DashboardFrame({ children }: DashboardFrameProps) {
               ))}
             </nav>
 
-            <div className="mt-auto rounded-[22px] border border-[#E2E8F0] bg-[#F8FAFC] p-4">
-              <p className="text-sm font-black text-[#0F172A]">Free Plan</p>
-              <div className="mt-4">
-                <DashboardUsageSummary />
+            <div className="mt-auto space-y-3">
+              <div className="rounded-[22px] border border-[#E2E8F0] bg-[#F8FAFC] p-4">
+                <p className="text-sm font-black text-[#0F172A]">Free Plan</p>
+                <div className="mt-4">
+                  <DashboardUsageSummary />
+                </div>
               </div>
+
+              <DashboardLogoutButton />
             </div>
           </div>
         </div>
@@ -184,8 +192,28 @@ function DashboardSidebar({ pathname }: { pathname: string }) {
             <p className="text-sm text-slate-500">Contact support</p>
           </div>
         </div>
+
+        <DashboardLogoutButton />
       </div>
     </aside>
+  );
+}
+
+function DashboardLogoutButton() {
+  const { loggingOut, logout } = useDashboardAuth();
+
+  return (
+    <button
+      type="button"
+      onClick={logout}
+      disabled={loggingOut}
+      className="flex w-full min-w-0 items-center gap-4 rounded-[16px] border border-transparent px-4 py-3 text-sm font-bold text-slate-500 transition hover:border-[#FECACA] hover:bg-[#FEF2F2] hover:text-[#B91C1C] disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      <LogOut size={20} className="shrink-0" />
+      <span className="truncate">
+        {loggingOut ? "Logging out..." : "Logout"}
+      </span>
+    </button>
   );
 }
 
@@ -235,7 +263,10 @@ function DashboardNavItem({
           : "text-slate-500 hover:bg-[#F8FAFC] hover:text-[#0F172A]",
       ].join(" ")}
     >
-      <Icon size={20} className={active ? "shrink-0 text-[#0EA5E9]" : "shrink-0"} />
+      <Icon
+        size={20}
+        className={active ? "shrink-0 text-[#0EA5E9]" : "shrink-0"}
+      />
       <span className="truncate">{item.label}</span>
     </Link>
   );

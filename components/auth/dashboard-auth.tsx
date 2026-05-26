@@ -200,34 +200,22 @@ export function useDashboardAuth() {
 }
 
 export function DashboardUserMenu() {
-  const { displayName, initials, loggingOut, logout, user } =
-    useDashboardAuth();
+  const { displayName, initials, user } = useDashboardAuth();
 
   return (
-    <>
-      <div className="hidden items-center gap-3 rounded-[18px] border border-[#E2E8F0] bg-white px-3 py-2 shadow-sm sm:flex">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0F172A] text-sm font-black text-white">
-          {initials}
-        </div>
-        <div>
-          <p className="text-sm font-bold leading-none text-[#0F172A]">
-            {displayName}
-          </p>
-          <p className="mt-1 text-xs font-medium text-slate-500">
-            {getUsageSubtitle(user)}
-          </p>
-        </div>
+    <div className="hidden items-center gap-3 rounded-[18px] border border-[#E2E8F0] bg-white px-3 py-2 shadow-sm sm:flex">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0F172A] text-sm font-black text-white">
+        {initials}
       </div>
-
-      <button
-        type="button"
-        onClick={logout}
-        disabled={loggingOut}
-        className="inline-flex h-12 items-center justify-center rounded-[14px] border border-[#CBD5E1] bg-white px-4 text-sm font-bold text-[#0F172A] shadow-sm transition hover:border-[#0EA5E9] hover:bg-[#F0F9FF] disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        {loggingOut ? "Logging out..." : "Logout"}
-      </button>
-    </>
+      <div>
+        <p className="text-sm font-bold leading-none text-[#0F172A]">
+          {displayName}
+        </p>
+        <p className="mt-1 text-xs font-medium text-slate-500">
+          {getUsageSubtitle(user)}
+        </p>
+      </div>
+    </div>
   );
 }
 

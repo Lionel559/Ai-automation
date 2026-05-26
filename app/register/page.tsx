@@ -3,8 +3,12 @@ import type { Metadata } from "next";
 import { AuthForm } from "@/components/auth/auth-form";
 
 export const metadata: Metadata = {
-  title: "Create Account | AIFLOW",
-  description: "Create your AIFLOW workspace account.",
+  title: "Create Account",
+  description:
+    "Create an AIFLOW account and start using AI automation tools for small business captions, replies, invoices, FAQs, and product descriptions.",
+  alternates: {
+    canonical: "/register",
+  },
 };
 
 export default function RegisterPage() {

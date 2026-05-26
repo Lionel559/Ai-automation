@@ -2,29 +2,15 @@ import { NextResponse } from "next/server";
 import type { HydratedDocument } from "mongoose";
 
 import { getAuthenticatedUser } from "@/lib/auth";
+import { forbiddenOriginResponse, isAllowedOrigin } from "@/lib/csrf";
+import {
+  invalidInputResponse,
+  settingsSchema,
+  validateJsonRequest,
+} from "@/lib/validations/api";
 import User, { type UserDocument } from "@/models/User";
 
 export const runtime = "nodejs";
-
-const currencies = ["USD", "NGN", "EUR", "GBP"] as const;
-const paymentMethods = [
-  "Cash",
-  "Bank Transfer",
-  "Credit Card",
-  "PayPal",
-  "Crypto",
-] as const;
-
-type Currency = (typeof currencies)[number];
-type PaymentMethod = (typeof paymentMethods)[number];
-
-type SettingsBody = {
-  businessLogo?: unknown;
-  businessName?: unknown;
-  defaultCurrency?: unknown;
-  defaultPaymentMethod?: unknown;
-  name?: unknown;
-};
 
 export async function GET() {
   try {
@@ -50,49 +36,25 @@ export async function GET() {
 
 export async function PUT(req: Request) {
   try {
+    if (!isAllowedOrigin(req)) {
+      return forbiddenOriginResponse();
+    }
+
     const currentUser = await getAuthenticatedUser();
 
     if (!currentUser) {
       return unauthorizedResponse();
     }
 
-    const body = (await req.json()) as SettingsBody;
-    const name = normalizeText(body.name);
-    const businessName = normalizeText(body.businessName);
-    const defaultCurrency = normalizeText(body.defaultCurrency);
-    const defaultPaymentMethod = normalizeText(body.defaultPaymentMethod);
-    const businessLogo = normalizeText(body.businessLogo);
+    const validation = await validateJsonRequest(req, settingsSchema);
 
-    if (!name) {
-      return NextResponse.json(
-        { success: false, message: "Name is required." },
-        { status: 400 }
-      );
-    }
-
-    if (!isCurrency(defaultCurrency)) {
-      return NextResponse.json(
-        { success: false, message: "Invalid default currency." },
-        { status: 400 }
-      );
-    }
-
-    if (!isPaymentMethod(defaultPaymentMethod)) {
-      return NextResponse.json(
-        { success: false, message: "Invalid default payment method." },
-        { status: 400 }
-      );
+    if (!validation.success) {
+      return invalidInputResponse();
     }
 
     const user = await User.findByIdAndUpdate(
       currentUser.id,
-      {
-        businessLogo,
-        businessName,
-        defaultCurrency,
-        defaultPaymentMethod,
-        name,
-      },
+      validation.data,
       { new: true }
     );
 
@@ -134,18 +96,6 @@ function serializeSettings(user: HydratedDocument<UserDocument>) {
     email: user.email,
     name: user.name,
   };
-}
-
-function normalizeText(value: unknown) {
-  return typeof value === "string" ? value.trim() : "";
-}
-
-function isCurrency(value: string): value is Currency {
-  return currencies.includes(value as Currency);
-}
-
-function isPaymentMethod(value: string): value is PaymentMethod {
-  return paymentMethods.includes(value as PaymentMethod);
 }
 
 function unauthorizedResponse() {

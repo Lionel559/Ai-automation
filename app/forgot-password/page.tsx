@@ -3,8 +3,12 @@ import type { Metadata } from "next";
 import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 
 export const metadata: Metadata = {
-  title: "Forgot Password | AIFLOW",
-  description: "Generate a secure password reset link for your AIFLOW account.",
+  title: "Forgot Password",
+  description:
+    "Request a secure password reset link for your AIFLOW AI automation workspace.",
+  alternates: {
+    canonical: "/forgot-password",
+  },
 };
 
 export default function ForgotPasswordPage() {

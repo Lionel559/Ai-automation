@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 
+import { forbiddenOriginResponse, isAllowedOrigin } from "@/lib/csrf";
+
 export const runtime = "nodejs";
 
-export async function POST() {
+export async function POST(req: Request) {
+  if (!isAllowedOrigin(req)) {
+    return forbiddenOriginResponse();
+  }
+
   const response = NextResponse.json({
     success: true,
     message: "Logged out successfully.",

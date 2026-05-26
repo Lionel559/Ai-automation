@@ -3,8 +3,12 @@ import type { Metadata } from "next";
 import { AuthForm } from "@/components/auth/auth-form";
 
 export const metadata: Metadata = {
-  title: "Login | AIFLOW",
-  description: "Log in to your AIFLOW workspace.",
+  title: "Login",
+  description:
+    "Log in to AIFLOW to manage AI captions, customer replies, invoices, FAQs, and product descriptions.",
+  alternates: {
+    canonical: "/login",
+  },
 };
 
 export default function LoginPage() {
